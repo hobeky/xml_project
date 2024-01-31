@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+   <div class="container">
+       <div class="row">
+           <div class="col-10 offset-1">
+               <h1>User</h1>
+
+               <table class="table table-striped">
+                   <tbody>
+                   <tr>
+                       <th>Id</th>
+                       <td>{{ user.xmlId is defined ? user.xmlId : 'Not Available' }}</td>
+                   </tr>
+                   <tr>
+                       <th>Name</th>
+                       <td>{{ user.name is defined ? user.name : 'Not Available' }}</td>
+                   </tr>
+                   <tr>
+                       <th>SureName</th>
+                       <td>{{ user.sureName is defined ? user.sureName : 'Not Available' }}</td>
+                   </tr>
+                   <tr>
+                       <th>Sex</th>
+                       <td>{{ user.sex is defined ? user.sex : 'Not Available' }}</td>
+                   </tr>
+                   <tr>
+                       <th>Date of birth</th>
+                       <td>{{ user.dateOfBirth is defined ? user.dateOfBirth : 'Not Available' }}</td>
+                   </tr>
+                   </tbody>
+               </table>
+
+               <a class="btn btn-primary" href="{{ path('app_user.index') }}">Back to List</a>
+               <a class="btn btn-secondary" href="{{ path('app_user.edit', {'id': user.xmlId}) }}">Edit</a>
+           </div>
+       </div>
+   </div>
+{% endblock %}

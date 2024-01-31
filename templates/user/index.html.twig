@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .age-bar-container {
+            width: 100px;
+            border: 1px solid #ddd;
+        }
+
+        .age-bar {
+            height: 10px;
+            background-color: green;
+        }
+
+        .age-bar-yellow {
+            height: 10px;
+            background-color: yellow;
+        }
+
+        .age-bar-red {
+            height: 10px;
+            background-color: red;
+        }
+    </style>
+{% endblock %}
+
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+   <div class="container">
+       <div class="row">
+           <div class="col-10 offset-1">
+               <h1>User index</h1>
+               <a class="btn btn-success" href="{{ path('app_user.new') }}">Create New</a>
+               <table class="table table-bordered table-hover">
+                   <thead class="thead-dark">
+                   <tr>
+                       <th>Id</th>
+                       <th>Name</th>
+                       <th>SureName</th>
+                       <th>Sex</th>
+                       <th>Age</th>
+                       <th>Age Graph</th>
+                       <th>Actions</th>
+                   </tr>
+                   </thead>
+                   <tbody>
+                   {% for user in users %}
+                       <tr>
+                           <td>{{ user.xmlId is defined ? user.xmlId : 'Not Available' }}</td>
+                           <td>{{ user.name is defined ? user.name : 'Not Available' }}</td>
+                           <td>{{ user.sureName is defined ? user.sureName : 'Not Available' }}</td>
+                           <td>{{ user.sex is defined ? user.sex : 'Not Available' }}</td>
+                           <td>
+                               {% if user.dateOfBirth %}
+                                   {% set currentYear = "now"|date("Y") %}
+                                   {{ currentYear - user.dateOfBirth }}
+                               {% else %}
+                                   Unknown Age
+                               {% endif %}
+                           </td>
+                           <td>
+                               {% if user.dateOfBirth %}
+                                   {% set currentYear = "now"|date("Y") %}
+                                   {% set age = currentYear - user.dateOfBirth %}
+                                   {% set barWidth = min((age - 18) * 100 / (65 - 18), 100) %} {# Ensure the width doesn't exceed 100% #}
+                                   {% set barColor = 'age-bar' %}
+
+                                   {% if age >= 55 and age <= 65 %}
+                                       {% set barColor = 'age-bar-yellow' %}
+                                   {% elseif age > 65 %}
+                                       {% set barColor = 'age-bar-red' %}
+                                       {% set barWidth = 100 %} {# Ensure full width for age > 65 #}
+                                   {% endif %}
+
+                                   <div class="age-bar-container">
+                                       <div class="{{ barColor }}" style="width: {{ barWidth }}%;"></div>
+                                   </div>
+                               {% else %}
+                                   Unknown Age
+                               {% endif %}
+                           </td>
+
+
+                           <td>
+                               <a class="btn btn-primary" href="{{ path('app_user.show', {'id': user.xmlId}) }}">Show</a>
+                               <a class="btn btn-secondary" href="{{ path('app_user.edit', {'id': user.xmlId}) }}">Edit</a>
+                           </td>
+                       </tr>
+                   {% else %}
+                       <tr>
+                           <td colspan="6" class="text-center">No records found</td>
+                       </tr>
+                   {% endfor %}
+                   </tbody>
+               </table>
+
+           </div>
+       </div>
+   </div>
+{% endblock %}
